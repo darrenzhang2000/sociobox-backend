@@ -14,12 +14,11 @@ app.use(bodyParser.urlencoded({
 
 //routes
 const user = require('./routes/user')
-const project = require('./routes/project')
 
 //connect to mongoose
 const mongoose = require('mongoose')
 mongoose.connect(
-    "",
+    "mongodb+srv://testuser:testuser@sociobox.rax1k.gcp.mongodb.net/sociobox?retryWrites=true&w=majority",
     { useNewUrlParser: true }
 )
 
@@ -34,6 +33,5 @@ app.get('/', (req, res) => {
 })
 
 app.use('/user', user)
-app.use('/project', project)
 
 app.listen(port, () => console.log("listening at port", port))

@@ -28,7 +28,6 @@ router.post("/register", (req, res) => {
         firstName: firstName,
         lastName: lastName,
         password: hashedPassword,
-        student: student
       })
   
       User.find({ email: user.email }, (err, users) => {

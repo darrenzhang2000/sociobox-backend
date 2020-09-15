@@ -2,6 +2,7 @@ const express = require('express')
 const Discussion = require('../models/Discussion')
 const Forum = require('../models/Forum')
 const Message = require('../models/Message')
+const { route } = require('./user')
 const router = express.Router()
 
 // get all forums
@@ -39,10 +40,12 @@ router.post('/forum/add', (req, res) => {
     })
 })
 
-// get all discussions
+// get all discussions with a certain forumId
 // http://localhost:5000/messages/discussions
+// body: forumId
 router.get('/discussions', (req, res) => {
-    Discussion.find({}, (err, discussions) => {
+    const { forumId } = req.body
+    Discussion.find({ forumId: forumId }, (err, discussions) => {
         if (err) {
             res.send({ success: false, error: err })
         } else {
@@ -91,6 +94,23 @@ router.post('/discussion/add', (req, res) => {
             }
         }
     })
+})
+
+// get all messages in a discussion
+// http://localhost:5000/messages/messages
+// body: discussionId
+router.get('/messages', (req, res) => {
+    const { discussionId } = req.body
+    Discussion.find({ discussionId: discussionId })
+        .populate('messages')
+        .exec((err, messages) => {
+            if (err) {
+                res.send({ success: false, error: err })
+            } else {
+                console.log(res)
+                res.send({ success: true, messages: messages })
+            }
+        })
 })
 
 // create and post message

@@ -1,7 +1,7 @@
 var mongoose = require('mongoose')
 
 const forumSchema = new mongoose.Schema({
-    Topic: String,
+    topic: String,
     discussions: [{
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'Discussion'

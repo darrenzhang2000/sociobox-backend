@@ -39,6 +39,19 @@ router.post('/forum/add', (req, res) => {
     })
 })
 
+// get all discussions
+// http://localhost:5000/messages/discussions
+router.get('/discussions', (req, res) => {
+    Discussion.find({}, (err, discussions) => {
+        if (err) {
+            res.send({ success: false, error: err })
+        } else {
+            res.send({ success: true, discussions: discussions })
+        }
+    })
+})
+
+
 // create new discussion and add it to forum
 // http://localhost:5000/messages/discussion/add
 // body: forumId

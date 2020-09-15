@@ -1,6 +1,7 @@
 const express = require('express')
 const Discussion = require('../models/Discussion')
 const Forum = require('../models/Forum')
+const Message = require('../models/Message')
 const router = express.Router()
 
 // create new forum
@@ -26,7 +27,7 @@ router.post('/forum/add', (req, res) => {
     })
 })
 
-// create new discussion
+// create new discussion and add it to forum
 // http://localhost:5000/messages/discussion/add
 // body: forumId
 router.post('/discussion/add', (req, res) => {
@@ -53,9 +54,9 @@ router.post('/discussion/add', (req, res) => {
                         if (err) {
                             res.send({ success: false, error: err })
                         } else {
-                            res.send({ 
-                                success: true, 
-                                msg: "Discussion successfully added." 
+                            res.send({
+                                success: true,
+                                msg: "Discussion successfully added."
                             })
                         }
                     })
@@ -67,5 +68,37 @@ router.post('/discussion/add', (req, res) => {
     })
 })
 
+// create and post message
+// http://localhost:5000/messages/message
+// body: forumId, firstName, lastName
+router.post('/message', (req, res) => {
+    const { discussionId, firstName, lastName, text } = req.body
+    let message = new Message({
+        discussionId,
+        firstName,
+        lastName,
+        text
+    })
+    message.save(err => {
+        if (err) {
+            res.send({
+                success: false,
+                error: err
+            })
+        } else {
+            Discussion.update(
+                { _id: discussionId },
+                { $push: { messages: message } },
+                (err, success) => {
+                    if(err){
+                        res.send({success: false, error: err})
+                    }else{
+                        res.send({success: true, msg: "Message successfully posted"})
+                    }
+                }
+            )
+        }
+    })
+})
 
 module.exports = router

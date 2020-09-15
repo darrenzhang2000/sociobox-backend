@@ -4,6 +4,18 @@ const Forum = require('../models/Forum')
 const Message = require('../models/Message')
 const router = express.Router()
 
+// get all forums
+// http://localhost:5000/messages/message
+router.get('/forums', (req, res) => {
+    Forum.find({}, (err, forums) => {
+        if (err) {
+            res.send({ success: false, error: err })
+        } else {
+            res.send({ success: true, forums: forums })
+        }
+    })
+})
+
 // create new forum
 // http://localhost:5000/messages/forum/add
 // body: topic 
@@ -90,10 +102,10 @@ router.post('/message', (req, res) => {
                 { _id: discussionId },
                 { $push: { messages: message } },
                 (err, success) => {
-                    if(err){
-                        res.send({success: false, error: err})
-                    }else{
-                        res.send({success: true, msg: "Message successfully posted"})
+                    if (err) {
+                        res.send({ success: false, error: err })
+                    } else {
+                        res.send({ success: true, msg: "Message successfully posted" })
                     }
                 }
             )
